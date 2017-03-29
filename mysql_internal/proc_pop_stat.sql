@@ -57,7 +57,7 @@ BEGIN
                 count(h.val), 
                 cast(min(h.val) as decimal(5,2)), 
                 cast(max(h.val) as decimal(5,2)), 
-                cast((max(h.val) - min(h.val)) as decimal(5,2)), 
+                cast((max(h.val) - min(h.val)) as decimal(5,2))
             FROM hist as h
             GROUP BY itemid;
 
