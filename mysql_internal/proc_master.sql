@@ -7,7 +7,7 @@
 #   2.  Call pop_def()                          #
 #   3.  Call pop_hist()                         #
 #   4.  Call pop_stat()                         #
-#   5.  Print report                            #
+#   5.  Print summary                           #
 #===============================================#
 
 USE reporter;
