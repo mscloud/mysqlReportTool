@@ -23,21 +23,21 @@ BEGIN
 
     CALL open_sum(curtime);
 
-    SELECT "Updating items list..." AS status;
+    SELECT now() AS time, "Updating items list..." AS status;
     CALL pop_def(curtime, p_status);
     UPDATE sum 
         SET def = p_status
         WHERE rtime = curtime;
     SET p_status = "unknown";
 
-    SELECT "Updating values history..." AS status;
+    SELECT now() AS time, "Updating values history..." AS status;
     CALL pop_hist(curtime, p_status);
     UPDATE sum 
         SET hist = p_status
         WHERE rtime = curtime;
     SET p_status = "unknown";
 
-    SELECT "Calculating statistics..." AS status;
+    SELECT now() AS time, "Calculating statistics..." AS status;
     CALL pop_stat(curtime, p_status);
     UPDATE sum 
         SET stat = p_status
