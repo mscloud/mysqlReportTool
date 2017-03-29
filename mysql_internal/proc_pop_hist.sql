@@ -58,7 +58,8 @@ BEGIN
             AND h.clock > unix_timestamp(date_sub(now(),          # 
                     interval 30 day))                             # Not older than 30 days
             AND h.value != '-Inf'                                 # Drop LOS values which otherwise would spoil 
-    ;                                                             # statistics ('-Inf.', '-41', '-128')
+            AND h.value != ''                                     # statistics ('-Inf', '', '-41', '-128')
+    ;                                                             # 
 
 # 3.
     DELETE FROM hist                                              # Delete lines older than 30 days.

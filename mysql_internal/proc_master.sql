@@ -46,4 +46,17 @@ BEGIN
 SELECT * FROM sum WHERE rtime = curtime;
 END//
 
+
+# appendix.
+CREATE EVENT daily_report
+    ON SCHEDULE EVERY 1 DAY
+    STARTS '2017-03-30 03:30:00' ENABLE
+    DO
+        BEGIN
+            CALL report_master();
+        END//
+
 DELIMITER ;
+
+# set global variable to enable scheduled events
+SET GLOBAL event_scheduler = ON;
