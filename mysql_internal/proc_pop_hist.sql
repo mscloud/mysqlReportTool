@@ -13,7 +13,7 @@ DELIMITER //
 
 CREATE PROCEDURE pop_hist(
     IN curtime INT, 
-    INOUT p_status VARCHAR
+    INOUT p_status VARCHAR(8)
     )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLWARNING

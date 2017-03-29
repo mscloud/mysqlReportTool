@@ -14,7 +14,7 @@ CREATE PROCEDURE open_sum(IN curtime INT)
 BEGIN
 
 # 1.
-    CREATE TABLE IF NOT EXISTS 'sum' (
+    CREATE TABLE IF NOT EXISTS `sum` (
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `rtime` int(11) NOT NULL,
         `def` varchar(8) NOT NULL DEFAULT 'not set',
@@ -26,7 +26,7 @@ BEGIN
 
 # 2.
     INSERT INTO sum (rtime) 
-        VALUE curtime;
+        VALUE (curtime);
 
 # 3.
     DELETE FROM sum 

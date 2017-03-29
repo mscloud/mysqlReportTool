@@ -17,7 +17,7 @@ CREATE PROCEDURE report_master()
 BEGIN
 
     DECLARE curtime INT;
-    DECLARE p_status VARCHAR;
+    DECLARE p_status VARCHAR(8);
     SET curtime = unix_timestamp(now());
     SET p_status = "unknown";
 

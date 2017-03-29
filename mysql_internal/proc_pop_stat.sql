@@ -13,7 +13,7 @@ DELIMITER //
 
 CREATE PROCEDURE pop_stat(
     IN curtime INT, 
-    INOUT p_status VARCHAR
+    INOUT p_status VARCHAR(8)
     )
 BEGIN
     DECLARE EXIT HANDLER FOR SQLWARNING
@@ -39,7 +39,7 @@ BEGIN
                                                                 # (for manually generated reports)
         PRIMARY KEY `st_1` (`itemid`, `rtime`),                 # 
         CONSTRAINT `st_fk_1` FOREIGN KEY (`itemid`)             # `itemid` is a foreign key taken from `def`.
-            REFERENCES `def` (`itemid`) ON DELETE CASCADE       # 
+            REFERENCES `def` (`itemid`) ON DELETE CASCADE,      # 
         CONSTRAINT `st_fk_2` FOREIGN KEY (`rtime`)              # `rtime` is a foreign key taken from `sum`.
             REFERENCES `sum` (`rtime`) ON DELETE CASCADE        # 
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                   # 
@@ -50,9 +50,14 @@ BEGIN
             avg, dev, count, 
             min, max, dif)
         SELECT 
-                h.itemid, curtime, 
-                avg(h.val), std(h.val), count(h.val), 
-                min(h.val), max(h.val), (max(h.val) - min(h.val))
+                h.itemid, 
+                curtime, 
+                cast(avg(h.val) as decimal(5,2)), 
+                cast(std(h.val) as decimal(5,2)), 
+                count(h.val), 
+                cast(min(h.val) as decimal(5,2)), 
+                cast(max(h.val) as decimal(5,2)), 
+                cast((max(h.val) - min(h.val)) as decimal(5,2)), 
             FROM hist as h
             GROUP BY itemid;
 
