@@ -1,0 +1,27 @@
+<!-- to-do list -->
+
+pop_def(curtime, p_status)
+    Add a counter for newly inserted rows, total number of rows, and deleted rows.
+
+pop_stat(curtime, p_status)
+    dev is useless. d(avg1)/d(t=1day) is more informative. See notebook for more details.
+    Exclude `cur` column.
+
+report_master()
+    Add comments.
+
+open_sum(curtime)
+    Add comments.
+
+out_stat()
+    Remove "get current values" operation. 
+    Think of some good and informative join.
+    Role must be parsed into 3 columns: location, venue, function.
+    Comments, of course.
+
+out_cur()
+    Write a new function to get (only) current values, nothing else.
+
+Done:
+Database privileges.
+pop_hist(curtime, p_status)
