@@ -85,7 +85,7 @@ BEGIN
             AND d.role != 'skip'
             AND minute(from_unixtime(h.clock)) = 0
             AND h.clock > (curtime - 2592000)
-            AND h.value NOT IN ('-Inf', '-40.000000', '') 
+            AND h.value NOT IN ('-Inf', '-40.000000', '');
 
 # 3.
 # Remove values that are older than 30 days (2,592,000 seconds).
