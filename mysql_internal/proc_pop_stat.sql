@@ -22,8 +22,6 @@ BEGIN
 # t3 is a "current time minus 3 days" timestamp. Used to calculate freq3, avg3.
     DECLARE t1 INT;
     DECLARE t3 INT;
-    SET t1 = curtime -  86400; #     24 * 3600 =  86 400
-    SET t3 = curtime - 259200; # 3 * 24 * 3600 = 259 200
 
 # 0.
 # Exit procedure on warning, update status variable
@@ -59,13 +57,13 @@ BEGIN
     CREATE TABLE IF NOT EXISTS `stat` (
         `itemid`  bigint(20) unsigned NOT NULL,
         `rtime`   int(11)      NOT NULL,
-        `freq3`   decimal(5,2) DEFAULT '0',
-        `freq30`  decimal(5,2) DEFAULT '0',
-        `avg1`    decimal(5,2) DEFAULT NULL,
-        `avg3`    decimal(5,2) DEFAULT NULL,
-        `avg30`   decimal(5,2) DEFAULT NULL,
-        `dif1`    decimal(5,2) DEFAULT NULL,
-        `avg3dif` decimal(5,2) DEFAULT NULL,
+        `freq3`   decimal(5,2),
+        `freq30`  decimal(5,2),
+        `avg1`    decimal(5,2),
+        `avg3`    decimal(5,2),
+        `avg30`   decimal(5,2),
+        `dif1`    decimal(5,2),
+        `avg3dif` decimal(5,2),
         PRIMARY KEY `stat_1` (`itemid`, `rtime`),
         CONSTRAINT `stat_fk_1` FOREIGN KEY (`itemid`)
             REFERENCES `def` (`itemid`) ON DELETE CASCADE,
@@ -79,23 +77,24 @@ BEGIN
         SELECT h.itemid, curtime, 
                 cast((count(h.val) / 30) AS decimal(5,2)), 
                 cast(avg(h.val) AS decimal(5,2))
-            FROM hist as h
+            FROM hist AS h
             GROUP BY itemid;
 
 # 2.2.
 # The stats freq3 and avg3 have to be calculated using "now minus 3 days"
 # timestamp. To avoid subqueries, a temporary table is created and then stats
 # are copied to the main table.
+    SET t3 = curtime - 259200; # 3 * 24 * 3600 = 259 200
     CREATE TEMPORARY TABLE `t_3dayspan` 
         SELECT 
                 itemid, 
                 cast((count(h.val) / 3) AS decimal(5,2)) as f3,
                 cast(avg(h.val) AS decimal(5,2)) as a3
-            FROM hist
+            FROM hist AS h
             WHERE htime > t3
             GROUP BY itemid;
     UPDATE stat AS s, t_3dayspan AS t
-        SET s.freq3 = t.f3, avg3 = t.a3
+        SET s.freq3 = t.f3, s.avg3 = t.a3
         WHERE s.itemid = t.itemid
         AND s.rtime = curtime;
     DROP TABLE t_3dayspan;
@@ -103,22 +102,27 @@ BEGIN
 # 2.3.
 # avg1 have to be calculated using "now minus 1 day" timestamp. Quite similar
 # to the previous block.
+    SET t1 = curtime -  86400; # 24 * 3600 = 86 400
+    CREATE TEMPORARY TABLE `t_1dayspan` 
+        SELECT 
+                itemid, 
+                cast(avg(h.val) AS decimal(5,2)) as a1
+            FROM hist AS h
+            WHERE htime > t1
+            GROUP BY itemid;
+    UPDATE stat AS s, t_1dayspan AS t
+        SET s.avg1 = t.a1
+        WHERE s.itemid = t.itemid
+        AND s.rtime = curtime;
+    DROP TABLE t_1dayspan;
+
+# 2.4.
+# How do we get dif1 and avg3dif? #################################
 
 
-SELECT itemid, avg(val)
-FROM hist
-WHERE htime > t1
-GROUP BY itemid;
-
-
-# dif1
-# avg3dif
-
-
-# 4.
-# stats that are based on one day time span
-
-
+# 3.
+# If the procedure didn't stop abnormally, we update the status variable, which
+# is then written into a summary table by report_master procedure.
     SET p_status = "OK";
 END//
 
