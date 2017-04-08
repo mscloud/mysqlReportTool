@@ -4,14 +4,7 @@ pop_def(curtime, p_status)
     Add a counter for newly inserted rows, total number of rows, and deleted rows.
 
 pop_stat(curtime, p_status)
-    dev is useless. d(avg1)/d(t=1day) is more informative. See notebook for more details.
-    Exclude `cur` column.
-
-report_master()
-    Add comments.
-
-open_sum(curtime)
-    Add comments.
+    Add dif1 and avg3dif calculations.
 
 out_stat()
     Remove "get current values" operation. 
@@ -24,4 +17,6 @@ out_cur()
 
 Done:
 Database privileges.
+report_master()
+open_sum(curtime)
 pop_hist(curtime, p_status)
