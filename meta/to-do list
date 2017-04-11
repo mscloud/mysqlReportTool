@@ -1,10 +1,22 @@
 <!-- to-do list -->
+UDF tests:
+    Try to break tables that are processed (wrong format, duplicate keys)
+    Try situations for pop_stat where some of input values are NULL
+    Check if avg1 and avg3 can really be NULL
+
+Transactions:
+    Check if transactions are relevant for some procedures.
+
+General:
+    try using default values for local variables (e.g. p_status).
 
 pop_def(curtime, p_status)
     Add a counter for newly inserted rows, total number of rows, and deleted rows.
+    Mark items that are not found in zabbix as "obsolete", and keep them.
 
 pop_stat(curtime, p_status)
-    Add dif1 and avg3dif calculations.
+    Add dif1 and avg3dif and dif30 calculations.
+    replace freq3 and freq30 with availaibility3 and availability30 (count30 / 720 * 100 %)
 
 out_stat()
     Remove "get current values" operation. 
@@ -15,8 +27,17 @@ out_stat()
 out_cur()
     Write a new function to get (only) current values, nothing else.
 
-Done:
-Database privileges.
-report_master()
 open_sum(curtime)
-pop_hist(curtime, p_status)
+    Add counters: added, removed, total lines for `def` and `hist`.
+
+
+Done:
+
+
+<!-- to-learn -->
+
+MySQL NDB
+Replication
+Table partitioning
+Optimization
+High Availability
