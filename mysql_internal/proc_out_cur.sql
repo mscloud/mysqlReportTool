@@ -30,25 +30,33 @@ BEGIN
             WHERE d.itemid = h.itemid
             AND h.clock > t60
             AND d.role != 'skip'
-            GROUP BY h.itemid
         UNION
         SELECT 
                 d.host, 
                 d.role, 
                 cast(hs.value AS decimal(5,2)) AS val, 
                 from_unixtime(hs.clock) AS time,
-                h.itemid
-            FROM reporter.def AS d, zabbix.history as hs
+                hs.itemid
+            FROM reporter.def AS d, zabbix.history_str as hs
             WHERE d.itemid = hs.itemid
             AND hs.clock > t60
             AND d.role != 'skip'
-            GROUP BY hs.itemid    
+            AND hs.value != ''
+            AND hs.value != '-Inf'
+        UNION
+        SELECT 
+                d.host, 
+                d.role, 
+                NULL AS val, 
+                from_unixtime(hs.clock) AS time,
+                hs.itemid
+            FROM reporter.def AS d, zabbix.history_str as hs
+            WHERE d.itemid = hs.itemid
+            AND hs.clock > t60
+            AND d.role != 'skip'
+            AND (hs.value = ''
+            OR hs.value = '-Inf')
     ;
-
-# 1.1. 
-    UPDATE t_cur 
-        SET val = NULL
-        WHERE val = 0.00;
 
 # 2. 
     SELECT host, role, time, val 
