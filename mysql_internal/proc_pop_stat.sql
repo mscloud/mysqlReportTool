@@ -119,15 +119,6 @@ BEGIN
 # 2.4.
 # How do we get dif1 and avg3dif? #################################
 
-/*
-foreach itemid do
-    find avg1(last), avg1(previous)
-    dif1 = (avg1(last) - avg1(previous)) / (last - previous) * 86 400
-
-foreach itemid do 
-    select avg(avg1) from stat where rtime >= t3
-*/
-
 
 # 3.
 # If the procedure didn't stop abnormally, we update the status variable, which
