@@ -1,4 +1,19 @@
 <!-- to-do list -->
+
+pop_stat(curtime, p_status)
+    Add dif1 and avg3dif and dif30 calculations.
+    replace freq3 and freq30 with availaibility3 and availability30 (count30 / 720 * 100 %)
+
+out_stat() & out_cur()
+    Add comments.
+
+open_sum(curtime)
+    Add counters: added, removed, total lines for `def` and `hist`.
+
+pop_def(curtime, p_status)
+    Add a counter for newly inserted rows, total number of rows, and deleted rows.
+    Mark items that are not found in zabbix as "obsolete", and keep them.
+
 UDF tests:
     Try to break tables that are processed (wrong format, duplicate keys)
     Try situations for pop_stat where some of input values are NULL
@@ -9,27 +24,6 @@ Transactions:
 
 General:
     try using default values for local variables (e.g. p_status).
-
-pop_def(curtime, p_status)
-    Add a counter for newly inserted rows, total number of rows, and deleted rows.
-    Mark items that are not found in zabbix as "obsolete", and keep them.
-
-pop_stat(curtime, p_status)
-    Add dif1 and avg3dif and dif30 calculations.
-    replace freq3 and freq30 with availaibility3 and availability30 (count30 / 720 * 100 %)
-
-out_stat()
-    Remove "get current values" operation. 
-    Think of some good and informative join.
-    Role must be parsed into 3 columns: location, venue, function.
-    Comments, of course.
-
-out_cur()
-    Write a new function to get (only) current values, nothing else.
-
-open_sum(curtime)
-    Add counters: added, removed, total lines for `def` and `hist`.
-
 
 Done:
 
