@@ -1,8 +1,7 @@
 <!-- to-do list -->
 
 pop_stat(curtime, p_status)
-    Add dif1 and avg3dif and dif30 calculations.
-    replace freq3 and freq30 with availaibility3 and availability30 (count30 / 720 * 100 %)
+    debug.
 
 out_stat() & out_cur()
     Add comments.
