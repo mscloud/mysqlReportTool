@@ -21,10 +21,8 @@ BEGIN
 # 00.
 # t1 is a "current time minus 1 day" timestamp. Used to calculate avg1.
 # t3 is a "current time minus 3 days" timestamp. Used to calculate freq3, avg3.
-# t30 is a "current time minus 30 days" timestamp. Used for cleanup.
     DECLARE t1  INT;
     DECLARE t3  INT;
-    DECLARE t30 INT;
 
 # 0.
 # Exit procedure on warning, update status variable
@@ -88,10 +86,10 @@ BEGIN
     SET @debug_status = "step 2.1";
 
     INSERT INTO stat (itemid, rtime, avlb30, avg30)
-        SELECT h.itemid, curtime, 
-                cast((count(h.val) / 7.2) AS decimal(5,2)), 
-                cast(avg(h.val) AS decimal(5,2))
-            FROM hist AS h
+        SELECT itemid, curtime, 
+                cast((count(val) / 7.2) AS decimal(5,2)), 
+                cast(avg(val) AS decimal(5,2))
+            FROM hist
             GROUP BY itemid;
 
 # 2.2.
@@ -105,9 +103,9 @@ BEGIN
     CREATE TEMPORARY TABLE `t_3dayspan` 
         SELECT 
                 itemid, 
-                cast((count(h.val) / 0.72) AS decimal(5,2)) as f3,
-                cast(avg(h.val) AS decimal(5,2)) as a3
-            FROM hist AS h
+                cast((count(val) / 0.72) AS decimal(5,2)) as f3,
+                cast(avg(val) AS decimal(5,2)) as a3
+            FROM hist
             WHERE htime > t3
             GROUP BY itemid;
     UPDATE stat AS s, t_3dayspan AS t
@@ -124,8 +122,8 @@ BEGIN
     CREATE TEMPORARY TABLE `t_1dayspan` 
         SELECT 
                 itemid, 
-                cast(avg(h.val) AS decimal(5,2)) as a1
-            FROM hist AS h
+                cast(avg(val) AS decimal(5,2)) as a1
+            FROM hist
             WHERE htime > t1
             GROUP BY itemid;
     UPDATE stat AS s, t_1dayspan AS t
@@ -143,16 +141,26 @@ BEGIN
 # added further.
     SET @debug_status = "step 2.4";
 
-    CREATE TEMPORARY TABLE `t_diff`
+    CREATE TEMPORARY TABLE `t_diff` (
+        itemid  bigint(20) unsigned,
+        ctime   int(11),
+        ptime   int(11),
+        mtime   int(11),
+        avg1c   decimal(5,2),
+        avg1p   decimal(5,2),
+        avg30c  decimal(5,2),
+        avg30m  decimal(5,2)
+        );
+    INSERT INTO t_diff
         SELECT
                 itemid,
-                max(rtime) AS ptime,
-                avg1 AS avg1p,
                 curtime AS ctime,
-                NULL AS avg1c,
+                max(rtime) AS ptime,
                 min(rtime) AS mtime,
-                NULL AS avg30c,
-                NULL AS avg30m
+                0.00 AS avg1c,
+                avg1 AS avg1p,
+                0.00 AS avg30c,
+                0.00 AS avg30m
             FROM stat
             WHERE rtime < t1
             GROUP BY itemid;
@@ -188,8 +196,14 @@ BEGIN
 # Calculate avg3dif. 
     SET @debug_status = "avg3dif";
 
-    CREATE TEMPORARY TABLE `t_avgdif`
-        SELECT itemid, avg(dif1) AS a
+    CREATE TEMPORARY TABLE `t_avgdif` (
+        itemid bigint(20) unsigned,
+        a decimal(5,2)
+        );
+    INSERT INTO t_avgdif
+        SELECT 
+                itemid, 
+                cast(avg(dif1) AS decimal(5,2)) AS a
             FROM stat
             WHERE rtime >= t3
             GROUP BY itemid;
@@ -207,9 +221,8 @@ BEGIN
 # Delete records that are older than 30 days.
     SET @debug_status = "Cleanup";
 
-    SET t30 = curtime - 2592000; # 30 * 24 * 3600 = 2 592 000
     DELETE FROM stat
-        WHERE rtime < t30;
+        WHERE rtime < curtime - 2592000; # 30 * 24 * 3600 = 2 592 000
 
 # 4.
 # If the procedure didn't stop abnormally, we update the status variable, which
