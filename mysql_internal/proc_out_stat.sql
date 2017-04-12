@@ -16,45 +16,55 @@ BEGIN
 
 # 0.
     DECLARE tstamp INT;
-    SET tstamp = (SELECT max(rtime) FROM sum);
-    SELECT from_unixtime(tstamp) AS "Report generated at:", now() AS "Current values from Zabbix requested at:";
+    SET tstamp = (SELECT rtime FROM sum ORDER BY rtime LIMIT 1);
+    SELECT from_unixtime(tstamp) AS "Statistics generated at:", now() AS "Current time:";
 
 # 1.
-    SELECT "avg1 - avg30 < -3 dbm" AS `Warnings`;
+    SELECT "Monthly average change > 3 dbm" AS `Warnings`;
     SELECT 
-            d.host, d.role, s.freq30, s.freq3, 
-            s.avg30, s.avg3, s.avg1, s.dif1, s.avg3dif
+            d.host, d.role, s.avlb30,
+            s.avg30, s.avg3, s.avg1, s.dif1, s.avg3dif, s.dif30
         FROM def AS d, stat AS s
         WHERE d.itemid = s.itemid
         AND s.rtime = tstamp
-        AND s.avg1 < s.avg30 - 3
-        ORDER BY d.role;
+        AND abs(s.dif30) > 3
+        ORDER BY s.dif30 DESC;
+
+    SELECT "Daily average change > 3 dbm" AS `Warnings`;
+    SELECT 
+            d.host, d.role, s.avlb3,
+            s.avg30, s.avg3, s.avg1, s.dif1, s.avg3dif, s.dif30
+        FROM def AS d, stat AS s
+        WHERE d.itemid = s.itemid
+        AND s.rtime = tstamp
+        AND abs(s.dif1) > 3
+        ORDER BY s.dif1 DESC;
 
     SELECT "Input too low" AS `Warnings`;
     SELECT 
-            d.host, d.role, s.freq30, s.freq3, 
-            s.avg30, s.avg3, s.avg1, s.dif1, s.avg3dif
+            d.host, d.role, s.avlb3, 
+            s.avg30, s.avg3, s.avg1, s.dif1, s.avg3dif, s.dif30
         FROM def AS d, stat AS s
         WHERE d.itemid = s.itemid
         AND s.rtime = tstamp
         AND s.avg1 < -21
-        ORDER BY s.avg1;
+        ORDER BY s.avg1 ASC;
 
     SELECT "Input too high" AS `Warnings`;
     SELECT 
-            d.host, d.role, s.freq30, s.freq3, 
-            s.avg30, s.avg3, s.avg1, s.dif1, s.avg3dif
+            d.host, d.role, s.avlb3, 
+            s.avg30, s.avg3, s.avg1, s.dif1, s.avg3dif, s.dif30
         FROM def AS d, stat AS s
         WHERE d.itemid = s.itemid
         AND s.rtime = tstamp
         AND s.avg1 > -4
-        ORDER BY s.avg1;
+        ORDER BY s.avg1 DESC;
 
 # 2.
     SELECT "Complete table" AS `And also...`;
     SELECT 
-            d.host, d.role, s.freq30, s.freq3, 
-            s.avg30, s.avg3, s.avg1, s.dif1, s.avg3dif
+            d.host, d.role, s.avlb30, s.avlb3, 
+            s.avg30, s.avg3, s.avg1, s.dif1, s.avg3dif, s.dif30
         FROM def AS d, stat AS s
         WHERE d.itemid = s.itemid
         AND s.rtime = tstamp
