@@ -1,11 +1,5 @@
 <!-- to-do list -->
 
-pop_stat(curtime, p_status)
-    debug.
-
-out_stat() & out_cur()
-    Add comments.
-
 open_sum(curtime)
     Add counters: added, removed, total lines for `def` and `hist`.
 
@@ -13,18 +7,12 @@ pop_def(curtime, p_status)
     Add a counter for newly inserted rows, total number of rows, and deleted rows.
     Mark items that are not found in zabbix as "obsolete", and keep them.
 
-UDF tests:
-    Try to break tables that are processed (wrong format, duplicate keys)
-    Try situations for pop_stat where some of input values are NULL
-    Check if avg1 and avg3 can really be NULL
-
 Transactions:
     Check if transactions are relevant for some procedures.
 
-General:
-    try using default values for local variables (e.g. p_status).
-
 Done:
+pop_stat(curtime, p_status)
+out_stat() & out_cur()
 
 
 <!-- to-learn -->
