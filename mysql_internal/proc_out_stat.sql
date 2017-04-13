@@ -16,7 +16,7 @@ BEGIN
 
 # 0.
     DECLARE tstamp INT;
-    SET tstamp = (SELECT rtime FROM sum ORDER BY rtime LIMIT 1);
+    SET tstamp = (SELECT rtime FROM sum ORDER BY rtime DESC LIMIT 1);
     SELECT from_unixtime(tstamp) AS "Statistics generated at:", now() AS "Current time:";
 
 # 1.
