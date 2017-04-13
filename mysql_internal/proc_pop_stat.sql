@@ -86,11 +86,16 @@ BEGIN
     SET @debug_status = "step 2.1";
 
     INSERT INTO stat (itemid, rtime, avlb30, avg30)
-        SELECT itemid, curtime, 
-                cast((count(val) / 7.2) AS decimal(5,2)), 
-                cast(avg(val) AS decimal(5,2))
-            FROM hist
-            GROUP BY itemid;
+        SELECT 
+                h.itemid, 
+                curtime, 
+                cast((count(h.val) / 7.2) AS decimal(5,2)), 
+                cast(avg(h.val) AS decimal(5,2))
+            FROM hist AS h, def AS d
+            WHERE h.itemid = d.itemid
+            AND h.val != -40
+            AND d.role != 'skip'
+            GROUP BY h.itemid;
 
 # 2.2.
 # The stats avlb3 and avg3 have to be calculated using "now minus 3 days"
@@ -102,12 +107,15 @@ BEGIN
     SET t3 = curtime - 259200; # 3 * 24 * 3600 = 259 200
     CREATE TEMPORARY TABLE `t_3dayspan` 
         SELECT 
-                itemid, 
-                cast((count(val) / 0.72) AS decimal(5,2)) as f3,
-                cast(avg(val) AS decimal(5,2)) as a3
-            FROM hist
-            WHERE htime > t3
-            GROUP BY itemid;
+                h.itemid, 
+                cast((count(h.val) / 0.72) AS decimal(5,2)) as f3,
+                cast(avg(h.val) AS decimal(5,2)) as a3
+            FROM hist AS h, def AS d
+            WHERE h.itemid = d.itemid
+            AND h.val != -40
+            AND d.role != 'skip'
+            AND h.htime > t3
+            GROUP BY h.itemid;
     UPDATE stat AS s, t_3dayspan AS t
         SET s.avlb3 = t.f3, s.avg3 = t.a3
         WHERE s.itemid = t.itemid
@@ -121,11 +129,14 @@ BEGIN
 
     CREATE TEMPORARY TABLE `t_1dayspan` 
         SELECT 
-                itemid, 
-                cast(avg(val) AS decimal(5,2)) as a1
-            FROM hist
-            WHERE htime > t1
-            GROUP BY itemid;
+                h.itemid, 
+                cast(avg(h.val) AS decimal(5,2)) as a1
+            FROM hist AS h, def AS d
+            WHERE h.itemid = d.itemid
+            AND h.val != -40
+            AND d.role != 'skip'
+            AND h.htime > t1
+            GROUP BY h.itemid;
     UPDATE stat AS s, t_1dayspan AS t
         SET s.avg1 = t.a1
         WHERE s.itemid = t.itemid
