@@ -13,6 +13,7 @@
 _END;
 
     $html_tail = <<<_END
+            <hr>
         </body>
     </html>
 _END;

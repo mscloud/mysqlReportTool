@@ -1,7 +1,7 @@
 <?php
 // rep_dbaccess.php
-    $hn = '10.98.1.5';
+    $hn = 'localhost';
     $un = 'phpclient';
     $pw = 'pI-IpcIient';
-    $db = 'phpaccess';
+    $db = 'reporter';
 ?>

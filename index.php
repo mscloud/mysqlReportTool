@@ -1,8 +1,14 @@
 <?php
+//index.php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+$libdir = 'php_drafts/';
 
+require_once $libdir.'rep_dbaccess.php';
+require_once $libdir.'rep_html.php';
+
+echo $html_head;
+
+// main part of code
+require_once $libdir.'rep_main.php';
+
+echo $html_tail;
