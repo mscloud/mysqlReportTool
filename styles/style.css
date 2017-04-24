@@ -1,0 +1,20 @@
+header, body, html {
+    font-family: sans-serif;
+}
+
+table, th, td {
+    font-family: sans-serif;
+    width: 100%;
+    border: 1px solid #808080;
+    border-collapse: collapse;
+    padding: 8px;
+}
+
+th {
+    color: white;
+    background-color: black;
+}
+
+tr:nth-child(even){
+    background-color: #707070;
+}
