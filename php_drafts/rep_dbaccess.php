@@ -4,4 +4,3 @@
     $un = 'phpclient';
     $pw = 'pI-IpcIient';
     $db = 'reporter';
-?>
