@@ -8,7 +8,7 @@ pop_def(curtime, p_status)
     Mark items that are not found in zabbix as "obsolete", and keep them.
 
 Transactions:
-    Check if transactions are relevant for some procedures.
+    Check if transactions and table locks are relevant for some procedures.
 
 Done:
 pop_stat(curtime, p_status)
@@ -22,3 +22,4 @@ Replication
 Table partitioning
 Optimization
 High Availability
+Tablespaces
