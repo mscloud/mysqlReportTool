@@ -11,6 +11,12 @@
         <body>
             <h1>Last Mile Optical Power Report</h1>
             <hr>
+            <a href="?">Main</a>
+            <a href="?p=rep">Reports</a>
+            <a href="?p=upd">Get Fresh Data</a>
+            <a href="?p=cfg">Edit Items</a>
+            <br><hr>
+
 _END;
 
     $html_tail = <<<_END
@@ -18,4 +24,3 @@ _END;
         </body>
     </html>
 _END;
-?>
