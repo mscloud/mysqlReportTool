@@ -3,8 +3,9 @@
 
 $libdir = 'php_drafts/';
 
-require_once $libdir.'rep_dbaccess.php';
 require_once $libdir.'rep_html.php';
+require_once $libdir.'rep_dbaccess.php';
+require_once $libdir.'rep_functions.php';
 
 echo $html_head;
 
